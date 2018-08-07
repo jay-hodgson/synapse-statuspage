@@ -13,6 +13,11 @@ node-lambda package -n synapse-statuspage -e production
 ## <lambda_role_arn> is the arn of the role to be assumed by the lambda function
 aws lambda create-function --region <region> --function-name synapse-statuspage --code S3Bucket=<bucket_name>,S3Key=synapse-statuspage-production.zip --role <lambda_role_arn> --handler index.handler --runtime nodejs8.10 --timeout 3 --memory-size 128
 ```
+
+To update the function:
+```
+aws lambda update-function-code --function-name synapse-statuspage --s3-bucket <bucket_name> --s3-key=synapse-statuspage-production.zip --publish
+```
 ## How to test locally
 Use the following command to run your Amazon Lambda index.js file locally. It passes event.json data to the Amazon Lambda event object, and uses env variables defined in deploy.env:
 ```
