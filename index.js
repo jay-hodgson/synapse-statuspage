@@ -1,4 +1,6 @@
+var isError;
 exports.handler = function (event, context, callback) {
+    isError = false;
     console.log('Running index.handler');
     console.log('==================================');
     console.log('event', event);
@@ -67,6 +69,9 @@ function testWebsite(callback) {
 }
 
 function updateStatusIoComponent(componentId, componentStatus, callback) {
+    if (!isError) {
+        isError = componentStatus == 'major_outage';
+    }
     var https = require('https');
     // get STATUS_PAGE_IO_API_KEY from env
     var apikey = process.env["STATUS_PAGE_IO_API_KEY"];
@@ -94,7 +99,11 @@ function updateStatusIoComponent(componentId, componentStatus, callback) {
             process.stdout.write(d);
             if (callback) {
                 console.log('Stopping index.handler');
-                callback(null, 'done');
+                if (isError) {
+                    callback(new Error("Synapse component unreachable"));
+                } else {
+                    callback(null, 'done');
+                }
             }
         });
     });
