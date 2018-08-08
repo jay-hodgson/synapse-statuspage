@@ -10,7 +10,7 @@ exports.handler = function (event, context, callback) {
 
 function testRepo(callback) {
     var https = require('https');
-    var url = 'https://repo-prod.prod.sagebase.org/repo/v1/admin/synapse/status';
+    var url = process.env["REPO_STATUS_ENDPOINT"];
     https.get(url, function (res) {
         console.log('Got response for repo stack status: ' + res.statusCode);
         // assemble the response body and check for down
@@ -40,7 +40,7 @@ function updateRepoStatus(componentStatus, callback, error) {
     if (error) {
         console.log("Got repo error: " + error);
     }
-    var componentId = 'sb280jd7bbs6';
+    var componentId = process.env["STATUS_PAGE_IO_REPO_COMPONENT_ID"];
     updateStatusIoComponent(componentId, componentStatus);
     testWebsite(callback);
 }
@@ -49,13 +49,13 @@ function updateWebsiteStatus(componentStatus, callback, error) {
     if (error) {
         console.log("Got website error: " + error);
     }
-    var componentId = 'dcgr2fz40pqc';
+    var componentId = process.env["STATUS_PAGE_IO_WEBSITE_COMPONENT_ID"];
     updateStatusIoComponent(componentId, componentStatus, callback);
 }
 
 function testWebsite(callback) {
     var https = require('https');
-    var url = 'https://www.synapse.org';
+    var url = process.env["WEBSITE_URL_ENDPOINT"];
     https.get(url, function (res) {
         console.log('Got response for website: ' + res.statusCode);
         if (res.statusCode !== 200) {
@@ -76,7 +76,7 @@ function updateStatusIoComponent(componentId, componentStatus, callback) {
     // get STATUS_PAGE_IO_API_KEY from env
     var apikey = process.env["STATUS_PAGE_IO_API_KEY"];
     var url = 'api.statuspage.io';
-    var pageId = 'kh896k90gyvg';
+    var pageId = process.env["STATUS_PAGE_IO_PAGE_ID"];
     var postData = 'component[status]=' + componentStatus;
 
     var options = {

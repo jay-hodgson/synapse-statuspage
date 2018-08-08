@@ -2,6 +2,11 @@
 Updates statuspage.io with the current Synapse application status.  Packaged as an AWS Lambda function.
 
 Note: used [node-lambda](https://github.com/motdotla/node-lambda) as a starting point.
+Before doing anything else, install node-lambda:
+```
+npm install -g node-lambda
+```
+
 ## How to create the deployment package
 To create a zipped package for Amazon Lambda deployment:
 ```
