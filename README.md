@@ -16,7 +16,7 @@ node-lambda package -n synapse-statuspage -e production -A ./build
 ```
 ## <bucket_name> is the name of the bucket where the package resides
 ## <lambda_role_arn> is the arn of the role to be assumed by the lambda function
-aws lambda create-function --region <region> --function-name synapse-statuspage --code S3Bucket=<bucket_name>,S3Key=synapse-statuspage-production.zip --role <lambda_role_arn> --handler index.handler --runtime nodejs8.10 --timeout 3 --memory-size 128
+aws lambda create-function --region <region> --function-name synapse-statuspage --code S3Bucket=<bucket_name>,S3Key=synapse-statuspage-production.zip --role <lambda_role_arn> --handler index.handler --runtime nodejs8.10 --timeout 3 --memory-size 128 --environment Variables="{REPO_STATUS_ENDPOINT=https://repo-prod.prod.sagebase.org/repo/v1/admin/synapse/status,WEBSITE_URL_ENDPOINT=https://www.synapse.org,STATUS_PAGE_IO_REPO_COMPONENT_ID=sb280jd7bbs6,STATUS_PAGE_IO_WEBSITE_COMPONENT_ID=dcgr2fz40pqc,STATUS_PAGE_IO_PAGE_ID=kh896k90gyvg}"
 ```
 
 To update the function:
