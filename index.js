@@ -25,7 +25,7 @@ function testRepo(callback) {
                 if (jsonBody.status !== 'READ_WRITE') {
                     updateRepoStatus('under_maintenance', callback, jsonBody.currentMessage);
                 } else {
-                    updateRepoStatus('operational', callback, jsonBody.currentMessage);
+                    updateRepoStatus('operational', callback);
                 }
             } else {
                 updateRepoStatus('major_outage', callback, res.statusCode + ' - ' + res.statusMessage);
