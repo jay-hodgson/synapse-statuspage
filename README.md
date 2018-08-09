@@ -10,7 +10,7 @@ npm install -g node-lambda
 ## How to create the deployment package
 To create a zipped package for Amazon Lambda deployment:
 ```
-node-lambda package -n synapse-statuspage -e production -A ./build
+zip -g ./build/synapse-statuspage-production.zip index.js
 ```
 ## [How to deploy the AWS Lambda Function deployment package](http://docs.aws.amazon.com/lambda/latest/dg/vpc-rds-upload-deployment-pkg.html)
 ```
