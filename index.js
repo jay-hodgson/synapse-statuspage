@@ -10,8 +10,16 @@ exports.handler = function (event, context, callback) {
 
 function testRepo(callback) {
     var https = require('https');
-    var url = process.env["REPO_STATUS_ENDPOINT"];
-    https.get(url, function (res) {
+    var url = require('url');
+    var serverUrl = url.parse(process.env["REPO_STATUS_ENDPOINT"]);
+
+    const options = {
+        host: serverUrl.host,
+        path: serverUrl.pathname,
+        method: 'GET',
+        headers: { 'User-Agent': 'statuspage-lambda' }
+      };
+    https.get(options, function (res) {
         console.log('Got response for repo stack status: ' + res.statusCode);
         // assemble the response body and check for down
         var body = '';
@@ -36,9 +44,9 @@ function testRepo(callback) {
     });
 }
 
-function updateRepoStatus(componentStatus, callback, error) {
-    if (error) {
-        console.log("Got repo error: " + error);
+function updateRepoStatus(componentStatus, callback, statusMessage) {
+    if (statusMessage) {
+        console.log("Got repo status: " + statusMessage);
     }
     var componentId = process.env["STATUS_PAGE_IO_REPO_COMPONENT_ID"];
     updateStatusIoComponent(componentId, componentStatus);
@@ -92,9 +100,6 @@ function updateStatusIoComponent(componentId, componentStatus, callback) {
     };
 
     var req = https.request(options, (res) => {
-        console.log('statusCode:', res.statusCode);
-        console.log('headers:', res.headers);
-
         res.on('data', (d) => {
             process.stdout.write(d);
             if (callback) {
