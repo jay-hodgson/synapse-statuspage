@@ -19,7 +19,7 @@ function testRepo(callback) {
         method: 'GET',
         headers: { 'User-Agent': 'statuspage-lambda' }
       };
-    https.get(options, function (res) {
+    const request = https.get(options, function (res) {
         console.log('Got response for repo stack status: ' + res.statusCode);
         // assemble the response body and check for down
         var body = '';
@@ -42,6 +42,10 @@ function testRepo(callback) {
     }).on('error', function (e) {
         updateRepoStatus('major_outage', callback, e.message);
     });
+    request.setTimeout( 20000, function( ) {
+        updateRepoStatus('major_outage', callback, 'Unable to connect to the Synapse backend services.');
+    });
+    request.end()
 }
 
 function updateRepoStatus(componentStatus, callback, statusMessage) {
@@ -64,7 +68,7 @@ function updateWebsiteStatus(componentStatus, callback, error) {
 function testWebsite(callback) {
     var https = require('https');
     var url = process.env["WEBSITE_URL_ENDPOINT"];
-    https.get(url, function (res) {
+    const request = https.get(url, function (res) {
         console.log('Got response for website: ' + res.statusCode);
         if (res.statusCode !== 200) {
             updateWebsiteStatus('major_outage', callback, res.statusCode + ' - ' + res.statusMessage);
@@ -74,6 +78,10 @@ function testWebsite(callback) {
     }).on('error', function (e) {
         updateWebsiteStatus('major_outage', callback, e.message);
     });
+    request.setTimeout( 20000, function( ) {
+        updateRepoStatus('major_outage', callback, 'Unable to connect to the Synapse website.');
+    });    
+    request.end()
 }
 
 function updateStatusIoComponent(componentId, componentStatus, callback) {
