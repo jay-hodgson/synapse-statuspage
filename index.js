@@ -1,4 +1,5 @@
 var isError;
+const TIMEOUT_MS = 30000;
 exports.handler = function (event, context, callback) {
     isError = false;
     console.log('Running index.handler');
@@ -42,7 +43,7 @@ function testRepo(callback) {
     }).on('error', function (e) {
         updateRepoStatus('major_outage', callback, e.message);
     });
-    request.setTimeout( 20000, function( ) {
+    request.setTimeout( TIMEOUT_MS, function( ) {
         updateRepoStatus('major_outage', callback, 'Unable to connect to the Synapse backend services.');
     });
     request.end()
@@ -78,7 +79,7 @@ function testWebsite(callback) {
     }).on('error', function (e) {
         updateWebsiteStatus('major_outage', callback, e.message);
     });
-    request.setTimeout( 20000, function( ) {
+    request.setTimeout( TIMEOUT_MS, function( ) {
         updateRepoStatus('major_outage', callback, 'Unable to connect to the Synapse website.');
     });    
     request.end()
